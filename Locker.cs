@@ -207,7 +207,7 @@ class LockerForm : Form
     void FormKeyDown(object sender, KeyEventArgs e)
     {
         pressed.Add(e.KeyCode);
-        if (locked && !entryVisible && pressed.Contains(Keys.V) && pressed.Contains(Keys.I))
+        if (locked && !entryVisible && pressed.Contains(Keys.V))
         {
             entryVisible = true;
             Cursor.Show();
