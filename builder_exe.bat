@@ -38,10 +38,10 @@ public class DiscordHelloForm : Form
 
     // ---- Speed settings (milliseconds). Lower = faster. Raise if it misfires. ----
     const int LOAD_WAIT      = 2500; // only used when Discord had to be started
-    const int FOCUS_WAIT     = 100;  // after bringing Discord to the front
-    const int SWITCHER_WAIT  = 120;  // after opening Ctrl+K
-    const int SEARCH_WAIT    = 350;  // after pasting the name, before Enter
-    const int CHANNEL_WAIT   = 300;  // after opening the chat, before pasting
+    const int FOCUS_WAIT     = 80;  // after bringing Discord to the front
+    const int SWITCHER_WAIT  = 100;  // after opening Ctrl+K
+    const int SEARCH_WAIT    = 200;  // after pasting the name, before Enter
+    const int CHANNEL_WAIT   = 180;  // after opening the chat, before pasting
     const int PASTE_WAIT     = 30;   // tiny pause around each paste
 
     RadioButton rbEveryone, rbPerson;
@@ -242,6 +242,7 @@ public class DiscordHelloForm : Form
                 Wait(CHANNEL_WAIT);
                 Paste(msg);
                 SendKeys.SendWait("{ENTER}");
+                Wait(100);
             }
             else
             {
