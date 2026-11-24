@@ -6,8 +6,8 @@ set "CSC=%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 if not exist "%CSC%" set "CSC=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\csc.exe"
 if not exist "%CSC%" (
     echo Could not find the .NET Framework compiler on this PC.
-    pause
-    exit /b 1
+ping 127.0.0.1 -n 1 -w 200 >nul
+exit /b 1
 )
 set "SRC=%TEMP%\DiscordHello_src.cs"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$l=Get-Content -LiteralPath '%~f0'; $i=[array]::IndexOf($l,'::CSHARP_BELOW'); $l[($i+1)..($l.Count-1)] | Set-Content -LiteralPath '%SRC%' -Encoding UTF8"
@@ -21,7 +21,7 @@ if exist "%~dp0DiscordHello.exe" (
     echo.
     echo Build failed. Check the messages above.
 )
-pause
+ping 127.0.0.1 -n 1 -w 200 >nul
 exit /b
 ::CSHARP_BELOW
 using System;
