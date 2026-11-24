@@ -11,8 +11,8 @@ using Microsoft.Win32;
 
 class LockerForm : Form
 {
-    const int CountdownSeconds = 10;
-    const int AutoUnlockSeconds = 900; // 15 minutes
+    const int CountdownSeconds = 60;
+    const int AutoUnlockSeconds = 1200; // 20 minutes
     const string PasswordHash = "2f9e50cf881d84da19d44dafea451c91c97aaab4cc7c5b080faae1491e60413e"; // SHA-256
 
     const string SysKey = @"Software\Microsoft\Windows\CurrentVersion\Policies\System";
