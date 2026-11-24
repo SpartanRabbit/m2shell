@@ -36,88 +36,70 @@ public class DiscordHelloForm : Form
     [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr h, int cmd);
     [DllImport("user32.dll")] static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
 
+    // ---- Locked settings ----
+    const string TARGET  = "chaotix_d_oasis2";
+    const string MESSAGE = "wind likes dih";
+
     // ---- Speed settings (milliseconds). Lower = faster. Raise if it misfires. ----
+    const int AUTO_DELAY     = 100;  // wait after the program opens, before auto-sending
     const int LOAD_WAIT      = 2500; // only used when Discord had to be started
-    const int FOCUS_WAIT     = 80;  // after bringing Discord to the front
-    const int SWITCHER_WAIT  = 100;  // after opening Ctrl+K
-    const int SEARCH_WAIT    = 200;  // after pasting the name, before Enter
-    const int CHANNEL_WAIT   = 180;  // after opening the chat, before pasting
+    const int FOCUS_WAIT     = 100;  // after bringing Discord to the front
+    const int SWITCHER_WAIT  = 120;  // after opening Ctrl+K
+    const int SEARCH_WAIT    = 350;  // after pasting the name, before Enter
+    const int CHANNEL_WAIT   = 300;  // after opening the chat, before pasting
     const int PASTE_WAIT     = 30;   // tiny pause around each paste
 
-    RadioButton rbEveryone, rbPerson;
     TextBox txtTarget, txtMessage;
     Button btnSend;
-    CheckBox chkAuto;
-    bool userEdited = false;
     Label lblStatus, lblCredit;
 
     public DiscordHelloForm()
     {
         Text = "Discord Hello";
-        ClientSize = new Size(380, 322);
+        ClientSize = new Size(380, 235);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
         Font = new Font("Segoe UI", 9.5f);
 
+        Label l0 = new Label();
+        l0.Text = "To:";
+        l0.Location = new Point(15, 15);
+        l0.AutoSize = true;
+        Controls.Add(l0);
+
+        txtTarget = new TextBox();
+        txtTarget.Text = TARGET;
+        txtTarget.ReadOnly = true;
+        txtTarget.TabStop = false;
+        txtTarget.Location = new Point(15, 38);
+        txtTarget.Width = 350;
+        Controls.Add(txtTarget);
+
         Label l1 = new Label();
         l1.Text = "Message:";
-        l1.Location = new Point(15, 15);
+        l1.Location = new Point(15, 72);
         l1.AutoSize = true;
         Controls.Add(l1);
 
         txtMessage = new TextBox();
-        txtMessage.Text = "wind likes dih";
-        txtMessage.Location = new Point(15, 38);
+        txtMessage.Text = MESSAGE;
+        txtMessage.ReadOnly = true;
+        txtMessage.TabStop = false;
+        txtMessage.Location = new Point(15, 95);
         txtMessage.Width = 350;
         Controls.Add(txtMessage);
 
-        rbEveryone = new RadioButton();
-        rbEveryone.Text = "Everyone (@everyone in the channel that's open)";
-        rbEveryone.Location = new Point(15, 78);
-        rbEveryone.AutoSize = true;
-        Controls.Add(rbEveryone);
-
-        rbPerson = new RadioButton();
-        rbPerson.Text = "One person / channel:";
-        rbPerson.Location = new Point(15, 108);
-        rbPerson.AutoSize = true;
-        rbPerson.Checked = true;
-        Controls.Add(rbPerson);
-
-        txtTarget = new TextBox();
-        txtTarget.Location = new Point(35, 136);
-        txtTarget.Width = 330;
-        txtTarget.Text = "chaotix_d_oasis2";
-        txtTarget.Enabled = true;
-        Controls.Add(txtTarget);
-
-        Label hint = new Label();
-        hint.Text = "Type their Discord username (or #channel name).";
-        hint.ForeColor = Color.Gray;
-        hint.Location = new Point(35, 164);
-        hint.AutoSize = true;
-        Controls.Add(hint);
-
-        rbPerson.CheckedChanged += delegate { txtTarget.Enabled = rbPerson.Checked; if (rbPerson.Checked) txtTarget.Focus(); };
-
-        chkAuto = new CheckBox();
-        chkAuto.Text = "Auto-send when opened (then close)";
-        chkAuto.Location = new Point(15, 192);
-        chkAuto.AutoSize = true;
-        chkAuto.Checked = true;
-        Controls.Add(chkAuto);
-
         btnSend = new Button();
-        btnSend.Text = "Open Discord && Send";
-        btnSend.Location = new Point(15, 222);
+        btnSend.Text = "Send again";
+        btnSend.Location = new Point(15, 135);
         btnSend.Size = new Size(350, 36);
         btnSend.Click += delegate { Run(); };
         Controls.Add(btnSend);
 
         lblStatus = new Label();
-        lblStatus.Text = "Ready.";
-        lblStatus.Location = new Point(15, 267);
+        lblStatus.Text = "Starting...";
+        lblStatus.Location = new Point(15, 182);
         lblStatus.AutoSize = true;
         lblStatus.ForeColor = Color.DimGray;
         Controls.Add(lblStatus);
@@ -126,30 +108,20 @@ public class DiscordHelloForm : Form
         lblCredit.Text = "Made by viuww";
         lblCredit.AutoSize = false;
         lblCredit.TextAlign = ContentAlignment.MiddleCenter;
-        lblCredit.Location = new Point(0, 293);
+        lblCredit.Location = new Point(0, 208);
         lblCredit.Size = new Size(380, 22);
         lblCredit.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
         lblCredit.ForeColor = Color.FromArgb(88, 101, 242); // Discord blurple
         Controls.Add(lblCredit);
 
-        // Editing anything during the countdown cancels the auto-send.
-        txtMessage.TextChanged += delegate { userEdited = true; };
-        txtTarget.TextChanged += delegate { userEdited = true; };
         Shown += delegate { AutoStart(); };
     }
 
     void AutoStart()
     {
-        if (!chkAuto.Checked) return;
-        for (int n = 3; n >= 1; n--)
-        {
-            if (userEdited || !chkAuto.Checked) { Status("Auto-send cancelled. Click the button to send."); return; }
-            Status("Auto-sending in " + n + "... (edit anything or untick the box to cancel)");
-            Wait(100);
-        }
-        if (userEdited || !chkAuto.Checked) { Status("Auto-send cancelled. Click the button to send."); return; }
+        Wait(AUTO_DELAY);
         Run();
-        if (lblStatus.Text == "Done!") { Wait(200); Close(); }
+        if (lblStatus.Text == "Done!") { Wait(500); Close(); }
     }
 
     void Status(string s) { lblStatus.Text = s; Application.DoEvents(); }
@@ -205,11 +177,6 @@ public class DiscordHelloForm : Form
 
     void Run()
     {
-        string msg = txtMessage.Text.Trim();
-        string target = txtTarget.Text.Trim();
-        if (msg.Length == 0) { MessageBox.Show("Type a message first."); return; }
-        if (rbPerson.Checked && target.Length == 0) { MessageBox.Show("Type a person or channel name."); return; }
-
         btnSend.Enabled = false;
         try
         {
@@ -231,25 +198,15 @@ public class DiscordHelloForm : Form
             Focus(p.MainWindowHandle);
             Wait(FOCUS_WAIT);
 
-            if (rbPerson.Checked)
-            {
-                Status("Sending to " + target + "...");
-                SendKeys.SendWait("^k");
-                Wait(SWITCHER_WAIT);
-                Paste(target);
-                Wait(SEARCH_WAIT);
-                SendKeys.SendWait("{ENTER}");
-                Wait(CHANNEL_WAIT);
-                Paste(msg);
-                SendKeys.SendWait("{ENTER}");
-                Wait(100);
-            }
-            else
-            {
-                Status("Sending to everyone...");
-                Paste("@everyone " + msg);
-                SendKeys.SendWait("{ENTER}");
-            }
+            Status("Sending to " + TARGET + "...");
+            SendKeys.SendWait("^k");
+            Wait(SWITCHER_WAIT);
+            Paste(TARGET);
+            Wait(SEARCH_WAIT);
+            SendKeys.SendWait("{ENTER}");
+            Wait(CHANNEL_WAIT);
+            Paste(MESSAGE);
+            SendKeys.SendWait("{ENTER}");
             Status("Done!");
         }
         catch (Exception ex)
