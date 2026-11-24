@@ -145,11 +145,11 @@ public class DiscordHelloForm : Form
         {
             if (userEdited || !chkAuto.Checked) { Status("Auto-send cancelled. Click the button to send."); return; }
             Status("Auto-sending in " + n + "... (edit anything or untick the box to cancel)");
-            Wait(1000);
+            Wait(100);
         }
         if (userEdited || !chkAuto.Checked) { Status("Auto-send cancelled. Click the button to send."); return; }
         Run();
-        if (lblStatus.Text == "Done!") { Wait(1000); Close(); }
+        if (lblStatus.Text == "Done!") { Wait(200); Close(); }
     }
 
     void Status(string s) { lblStatus.Text = s; Application.DoEvents(); }
