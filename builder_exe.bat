@@ -37,8 +37,8 @@ public class DiscordHelloForm : Form
     [DllImport("user32.dll")] static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
 
     // ---- Locked settings ----
-    const string TARGET  = "chaotix_d_oasis2";
-    const string MESSAGE = "wiuwwisaura";
+    const string TARGET  = "viuww";
+    const string MESSAGE = "viuwwisaura";
 
     // ---- Speed settings (milliseconds). Lower = faster. Raise if it misfires. ----
     const int AUTO_DELAY     = 100;  // wait after the program opens, before auto-sending
