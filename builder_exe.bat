@@ -38,15 +38,15 @@ public class DiscordHelloForm : Form
 
     // ---- Locked settings ----
     const string TARGET  = "chaotix_d_oasis2";
-    const string MESSAGE = "wind likes dih";
+    const string MESSAGE = "wiuwwisaura";
 
     // ---- Speed settings (milliseconds). Lower = faster. Raise if it misfires. ----
     const int AUTO_DELAY     = 100;  // wait after the program opens, before auto-sending
-    const int LOAD_WAIT      = 2500; // only used when Discord had to be started
+    const int LOAD_WAIT      = 2000; // only used when Discord had to be started
     const int FOCUS_WAIT     = 100;  // after bringing Discord to the front
-    const int SWITCHER_WAIT  = 120;  // after opening Ctrl+K
-    const int SEARCH_WAIT    = 350;  // after pasting the name, before Enter
-    const int CHANNEL_WAIT   = 300;  // after opening the chat, before pasting
+    const int SWITCHER_WAIT  = 100;  // after opening Ctrl+K
+    const int SEARCH_WAIT    = 250;  // after pasting the name, before Enter
+    const int CHANNEL_WAIT   = 200;  // after opening the chat, before pasting
     const int PASTE_WAIT     = 30;   // tiny pause around each paste
 
     TextBox txtTarget, txtMessage;
@@ -166,7 +166,7 @@ public class DiscordHelloForm : Form
         SetForegroundWindow(h);
     }
 
-    // Puts text on the clipboard and pastes it instantly (no slow typing).
+    // Puts text on the clipboard and pastes it instantly
     void Paste(string text)
     {
         Clipboard.SetDataObject(text, true, 10, 50);
