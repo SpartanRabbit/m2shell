@@ -38,7 +38,7 @@ public class DiscordHelloForm : Form
 
     // ---- Locked settings ----
     const string TARGET  = "viuww";
-    const string MESSAGE = "viuwwisaura";
+    const string MESSAGE = "dih?";
 
     // ---- Speed settings (milliseconds). Lower = faster. Raise if it misfires. ----
     const int AUTO_DELAY     = 100;  // wait after the program opens, before auto-sending
